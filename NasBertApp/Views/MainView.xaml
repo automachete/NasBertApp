@@ -1,0 +1,102 @@
+﻿<Window x:Class="NasBertApp.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NasBertApp"
+        xmlns:vm="clr-namespace:NasBertApp.ViewModels;assembly=NasBertApp"
+        d:DataContext="{d:DesignInstance {x:Type vm:MainViewModel}}"
+        mc:Ignorable="d"
+        Title="NAS-BERT Text Classification App" Height="450" Width="800">
+    <TabControl x:Name="TabControl">
+        <TabItem Header="Training" Background="Blue">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,0">
+                        <TextBlock Text="Data Set : " HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding DataSetPath, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
+                                 Width="400" Margin="0,0,10,0"/>
+                        <Button Content="Browse..." Command="{Binding ChoiceDataSetCommand}" Background="LightGray" FontSize="12" Foreground="Black" Height="Auto" Width="Auto" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,0">
+                        <TextBlock Text="Save Folder : " HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding SaveFolderPath, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" Width="400" Margin="0,0,10,0"/>
+                        <Button Content="Browse..." Command="{Binding ChoiceSaveFolderCommand}" Background="LightGray" FontSize="12" Foreground="Black" Height="Auto" Width="Auto" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,5,0,0">
+                        <TextBlock Text="Model Name : " HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding ModelName, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
+                         Width="110"/>
+                        <TextBlock Text=".zip" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="3" Grid.Column="2">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <ProgressBar IsIndeterminate="True"
+                             Visibility="{Binding TrainingProgressVisibled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                             Style="{StaticResource MaterialDesignCircularProgressBar}" Margin="0,0,10,0" />
+                        <Button Content="Training" Command="{Binding TrainingCommand}" Margin="0,5,10,0" Cursor="Hand"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Predict" Background="Blue">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,10,0,0">
+                        <TextBlock Text="Model File : " HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding ModelPath}" Width="400" />
+                        <Button Content="Browse..." Command="{Binding ChoiceModelCommand}"
+                                Background="LightGray" FontSize="12" Foreground="Black"
+                                Height="Auto" Width="Auto" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <TextBlock Text="Text : " HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <TextBox Text="{Binding InputText}"
+                                 Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                                 AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Top" Height="100" Width="650" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="2" Grid.Column="2">
+                    <StackPanel Orientation="Horizontal">
+                        <ProgressBar IsIndeterminate="True"
+                             Visibility="{Binding ClassifyProgressVisibled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                             Style="{StaticResource MaterialDesignCircularProgressBar}" Margin="0,0,5,0" />
+                        <Button Content="Classify" Command="{Binding ClassifyCommand}" Margin="0,0,10,0" Cursor="Hand"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>
