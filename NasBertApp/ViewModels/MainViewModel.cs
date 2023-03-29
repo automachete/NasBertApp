@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using NasBertApp.Models;
@@ -9,21 +10,21 @@ namespace NasBertApp.ViewModels
 {
     internal class MainViewModel : NotificationObject
     {
-        private string _dataSetPath;
+        private string _dataSetPath = string.Empty;
         public string DataSetPath
         {
             get { return this._dataSetPath; }
             set { SetProperty(ref this._dataSetPath, value); }
         }
 
-        private string _saveFolderPath;
+        private string _saveFolderPath = string.Empty;
         public string SaveFolderPath
         {
             get { return this._saveFolderPath; }
             set { SetProperty(ref this._saveFolderPath, value); }
         }
 
-        private string _modelName;
+        private string _modelName = string.Empty;
         public string ModelName
         {
             get { return this._modelName; }
@@ -37,18 +38,32 @@ namespace NasBertApp.ViewModels
             set { SetProperty(ref this._trainingProgressVisibled, value); }
         }
 
-        private string _modelPath;
+        private string _modelPath = string.Empty;
         public string ModelPath
         {
             get { return this._modelPath; }
             set { SetProperty(ref this._modelPath, value); }
         }
 
-        private string _inputText;
+        private string _inputText = string.Empty;
         public string InputText
         {
             get { return this._inputText; }
             set { SetProperty(ref this._inputText, value); }
+        }
+
+        private string _resultClass = string.Empty;
+        public string ResultClass
+        {
+            get { return this._resultClass; }
+            set { SetProperty(ref this._resultClass, value); }
+            }
+
+        private float _maxScore;
+        public float MaxScore
+        {
+            get { return this._maxScore; }
+            set { SetProperty(ref this._maxScore, value); }
         }
 
         private bool _classifyProgressVisibled;
@@ -58,13 +73,21 @@ namespace NasBertApp.ViewModels
             set { SetProperty(ref this._classifyProgressVisibled, value); }
         }
 
+        private bool _resultVisibled;
+        public bool ResultVisibled
+        {
+            get { return this._resultVisibled; }
+            set { SetProperty(ref this._resultVisibled, value); }
+        }
+
         public MainViewModel()
         {
             this.TrainingProgressVisibled = false;
             this.ClassifyProgressVisibled = false;
+            this.ResultVisibled = false;
         }
 
-        private DelegateCommand _choiceDataSetCommand;
+        private DelegateCommand? _choiceDataSetCommand;
         public DelegateCommand ChoiceDataSetCommand
         {
             get
@@ -78,7 +101,7 @@ namespace NasBertApp.ViewModels
             }
         }
 
-        private DelegateCommand _choiceSaveFolderCommand;
+        private DelegateCommand? _choiceSaveFolderCommand;
         public DelegateCommand ChoiceSaveFolderCommand
         {
             get
@@ -92,7 +115,7 @@ namespace NasBertApp.ViewModels
             }
         }
 
-        private DelegateCommand _trainingCommand;
+        private DelegateCommand? _trainingCommand;
         public DelegateCommand TrainingCommand
         {
             get
@@ -119,9 +142,9 @@ namespace NasBertApp.ViewModels
                 }));
             }
         }
-        private TextClassifier _textClassifier;
+        private TextClassifier? _textClassifier;
 
-        private DelegateCommand _choiceModelCommand;
+        private DelegateCommand? _choiceModelCommand;
         public DelegateCommand ChoiceModelCommand
         {
             get
@@ -135,7 +158,7 @@ namespace NasBertApp.ViewModels
             }
         }
 
-        private DelegateCommand _classifyCommand;
+        private DelegateCommand? _classifyCommand;
         public DelegateCommand ClassifyCommand
         {
             get
@@ -147,11 +170,15 @@ namespace NasBertApp.ViewModels
                     this._textClassifier = new TextClassifier()
                     {
                         ModelPath = this.ModelPath,
+                        InputText = this.InputText,
                     };
                     Task classifyText = this._textClassifier.ClassifyTextAsync();
                     classifyText.ContinueWith(_ =>
                     {
+                        this.ResultClass = this._textClassifier.ResultClass;
+                        this.MaxScore= this._textClassifier.MaxScore;
                         this.ClassifyProgressVisibled = false;
+                        this.ResultVisibled = true;
                     });
                 },
                 _ =>

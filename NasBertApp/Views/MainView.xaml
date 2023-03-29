@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NasBertApp"
+        xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
         xmlns:vm="clr-namespace:NasBertApp.ViewModels;assembly=NasBertApp"
         d:DataContext="{d:DesignInstance {x:Type vm:MainViewModel}}"
         mc:Ignorable="d"
@@ -85,7 +86,9 @@
                         <TextBlock Text="Text : " HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <TextBox Text="{Binding InputText}"
                                  Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                                 AcceptsReturn="True" TextWrapping="Wrap" VerticalAlignment="Top" Height="100" Width="650" />
+                                 FontSize="18"
+                                 AcceptsReturn="True" TextWrapping="Wrap"
+                                 VerticalAlignment="Top" Height="100" Width="650" />
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="2" Grid.Column="2">
@@ -94,6 +97,18 @@
                              Visibility="{Binding ClassifyProgressVisibled, Converter={StaticResource BooleanToVisibilityConverter}}"
                              Style="{StaticResource MaterialDesignCircularProgressBar}" Margin="0,0,5,0" />
                         <Button Content="Classify" Command="{Binding ClassifyCommand}" Margin="0,0,10,0" Cursor="Hand"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="3" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal">
+                        <emoji:TextBlock Text="{Binding ResultClass}"
+                               HorizontalAlignment="Left" VerticalAlignment="Center"
+                               FontWeight="Bold" Margin="0,10,0,0" FontSize="20"
+                                />
+                        <TextBlock Text="{Binding MaxScore, StringFormat={}{0:N2}%}"
+                               Visibility="{Binding ResultVisibled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                               HorizontalAlignment="Left" VerticalAlignment="Center"
+                               FontWeight="Bold" Margin="10,10,0,0" FontSize="20" />
                     </StackPanel>
                 </Grid>
             </Grid>

@@ -20,11 +20,13 @@ namespace NasBertApp.Models
 {
     internal class TextClassifier
     {
-        public string DataSetPath { get; set; }
-        public string SavaFolderPath { get; set; }
-        public string ModelName { get; set; }
-        public string ModelPath { get; set; }
-        public string InputText { get; set; }
+        public string DataSetPath { get; set; } = string.Empty;
+        public string SavaFolderPath { get; set; } = string.Empty;
+        public string ModelName { get; set; } = string.Empty;
+        public string ModelPath { get; set; } = string.Empty;
+        public string InputText { get; set; } = string.Empty;
+        public string ResultClass { get; set; } = string.Empty;
+        public float MaxScore { get; set; }
 
         public async Task TrainingModelAsync()
         {
@@ -106,13 +108,11 @@ namespace NasBertApp.Models
 
             // Generate a series of predictions based on user input
             // Get a prediction
-            this.InputText = "Teenage turtles will beat you up";
             ModelInput sampleData = new(this.InputText);
             ModelOutput result = engine.Predict(sampleData);
 
-            // Print classification
-            float maxScore = result.Score[(uint)result.PredictedLabel];
-            Debug.WriteLine($"Matched intent {(TurtleIntents)result.PredictedLabel} with score of {maxScore:f2}");
+            this.ResultClass = Sentiments.SentimentsDict[result.PredictedLabel];
+            this.MaxScore = result.Score[(uint)result.PredictedLabel] * 100;
         }
     }
 
