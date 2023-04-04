@@ -52,6 +52,8 @@ namespace NasBertApp.Models
                 hasHeader: false
             );
 
+            /** MODEL TRAINING ****************************************************************************/
+
             // To evaluate the effectiveness of machine learning models we split them into a training set for fitting
             // and a testing set to evaluate that trained model against unknown data
             DataOperationsCatalog.TrainTestData dataSplit = mlContext.Data.TrainTestSplit(dataView, testFraction: 0.2, seed: 1234);
@@ -78,6 +80,24 @@ namespace NasBertApp.Models
             var modelPath = Path.Combine(this.SavaFolderPath, this.ModelName + ".zip");
             Debug.WriteLine(modelPath);
             mlContext.Model.Save(model, dataView.Schema, modelPath);
+
+            /** MODEL EVALUATION **************************************************************************/
+
+            // Evaluate the model's performance against the TEST data set
+            Debug.WriteLine("Evaluating model performance...");
+
+            // We need to apply the same transformations to our test set so it can be evaluated via the resulting model
+            IDataView transformedTest = model.Transform(testData);
+            MulticlassClassificationMetrics metrics = mlContext.MulticlassClassification.Evaluate(transformedTest);
+
+            // Display Metrics
+            Debug.WriteLine($"Macro Accuracy: {metrics.MacroAccuracy}");
+            Debug.WriteLine($"Micro Accuracy: {metrics.MicroAccuracy}");
+            Debug.WriteLine($"Log Loss: {metrics.LogLoss}");
+            Debug.WriteLine("");
+
+            // Confusion Matrix with class list
+            Debug.WriteLine(metrics.ConfusionMatrix.GetFormattedConfusionTable());
         }
 
         public async Task ClassifyTextAsync()
